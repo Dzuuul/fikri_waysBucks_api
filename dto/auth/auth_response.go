@@ -2,6 +2,7 @@ package authdto
 
 type RegisterResponse struct {
 	Fullname string `gorm:"type: varchar(255)" json:"fullname"`
+	Token    string `gorm:"type: varchar(255)" json:"token"`
 }
 
 type LoginResponse struct {

@@ -7,3 +7,12 @@ type User struct {
 	Password string `json:"-" gorm:"type: varchar(255)"`
 	Image    string `json:"image" gorm:"type: varchar(255)"`
 }
+
+type UsersProfileResponse struct {
+	ID       int    `json:"id"`
+	Fullname string `json:"fullname"`
+}
+
+func (UsersProfileResponse) TableName() string {
+	return "users"
+}
