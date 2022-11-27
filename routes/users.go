@@ -2,7 +2,6 @@ package routes
 
 import (
 	"ways-bucks-api/handlers"
-	"ways-bucks-api/pkg/middleware"
 	"ways-bucks-api/pkg/mysql"
 	"ways-bucks-api/repositories"
 
@@ -15,5 +14,5 @@ func UserRoutes(r *mux.Router) {
 
 	r.HandleFunc("/users", h.FindUsers).Methods("GET")
 	r.HandleFunc("/user/{id}", h.GetUser).Methods("GET")
-	r.HandleFunc("/user/{id}", middleware.Auth(h.DeleteUser)).Methods("DELETE")
+	r.HandleFunc("/user/{id}", h.DeleteUser).Methods("DELETE")
 }
