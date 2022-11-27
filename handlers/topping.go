@@ -15,7 +15,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// var path_file_topping = "http://localhost:5000/uploads/"
 var path_file_topping = os.Getenv("PATH_FILE")
 
 type handlerTopping struct {
@@ -71,7 +70,7 @@ func (h *handlerTopping) CreateTopping(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
-	userId := int(userInfo["id"].(float64))
+	// userId := int(userInfo["id"].(float64))
 	userRole := userInfo["role"]
 
 	if userRole != "admin" {
@@ -100,10 +99,9 @@ func (h *handlerTopping) CreateTopping(w http.ResponseWriter, r *http.Request) {
 	}
 
 	topping := models.Topping{
-		Title:  request.Title,
-		Price:  request.Price,
-		Image:  filename,
-		UserID: userId,
+		Title: request.Title,
+		Price: request.Price,
+		Image: filename,
 	}
 
 	topping, err = h.ToppingRepository.CreateTopping(topping)
