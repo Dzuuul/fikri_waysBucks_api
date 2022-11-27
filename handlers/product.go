@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 	"strconv"
 	productdto "ways-bucks-api/dto/product"
 	dto "ways-bucks-api/dto/result"
@@ -14,7 +15,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var path_file = "http://localhost:5000/uploads/"
+// var path_file = "http://localhost:5000/uploads/"
+var path_file = os.Getenv("PATH_FILE")
 
 type handlerProduct struct {
 	ProductRepository repositories.ProductRepository
@@ -75,7 +77,6 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	filename := dataContex.(string)
 
 	price, _ := strconv.Atoi(r.FormValue("price"))
-	// qty, _ := strconv.Atoi(r.FormValue("qty"))
 	request := productdto.ProductRequest{
 		Title: r.FormValue("title"),
 		Price: price,
