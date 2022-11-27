@@ -53,6 +53,7 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := models.User{
+		Role:     "user",
 		Email:    request.Email,
 		Password: password,
 		Fullname: request.Fullname,
@@ -109,6 +110,7 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	claims := jwt.MapClaims{}
 	claims["id"] = user.ID
+	claims["role"] = user.Role
 	claims["exp"] = time.Now().Add(time.Hour * 2).Unix()
 
 	token, errGenerateToken := jwtToken.GenerateToken(&claims)

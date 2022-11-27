@@ -72,6 +72,14 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
 	userId := int(userInfo["id"].(float64))
+	userRole := userInfo["role"]
+
+	if userRole != "admin" {
+		w.WriteHeader(http.StatusUnauthorized)
+		response := dto.ErrorResult{Code: http.StatusUnauthorized, Message: "forbidden access"}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	dataContex := r.Context().Value("dataFile")
 	filename := dataContex.(string)
@@ -116,8 +124,20 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 func (h *handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	userRole := userInfo["role"]
+
 	dataContex := r.Context().Value("dataFile")
 	filename := dataContex.(string)
+
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	if userRole != "admin" {
+		w.WriteHeader(http.StatusUnauthorized)
+		response := dto.ErrorResult{Code: http.StatusUnauthorized, Message: "forbidden access"}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	price, _ := strconv.Atoi(r.FormValue("price"))
 	qty, _ := strconv.Atoi(r.FormValue("qty"))
@@ -128,7 +148,6 @@ func (h *handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		Qty:   qty,
 	}
 
-	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 	product, err := h.ProductRepository.GetProduct(int(id))
 
 	if err != nil {
@@ -170,7 +189,17 @@ func (h *handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 func (h *handlerProduct) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	userRole := userInfo["role"]
+
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	if userRole != "admin" {
+		w.WriteHeader(http.StatusUnauthorized)
+		response := dto.ErrorResult{Code: http.StatusUnauthorized, Message: "forbidden access"}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	product, err := h.ProductRepository.GetProduct(id)
 	if err != nil {
