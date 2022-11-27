@@ -71,7 +71,7 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
-	userId := int(userInfo["id"].(float64))
+	// userId := int(userInfo["id"].(float64))
 	userRole := userInfo["role"]
 
 	if userRole != "admin" {
@@ -100,10 +100,10 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	product := models.Product{
-		Title:  request.Title,
-		Price:  request.Price,
-		Image:  filename,
-		UserID: userId,
+		Title: request.Title,
+		Price: request.Price,
+		Image: filename,
+		// UserID: userId,
 	}
 
 	product, err = h.ProductRepository.CreateProduct(product)
