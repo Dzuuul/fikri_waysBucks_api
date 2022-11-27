@@ -9,6 +9,7 @@ import (
 	"ways-bucks-api/models"
 	"ways-bucks-api/repositories"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/mux"
 )
 
@@ -62,7 +63,17 @@ func (h *handler) GetUser(w http.ResponseWriter, r *http.Request) {
 func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	userRole := userInfo["role"]
+
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	if userRole != "admin" {
+		w.WriteHeader(http.StatusUnauthorized)
+		response := dto.ErrorResult{Code: http.StatusUnauthorized, Message: "only admin can delete user"}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	user, err := h.UserRepository.GetUser(id)
 	if err != nil {
