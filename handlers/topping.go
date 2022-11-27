@@ -72,6 +72,14 @@ func (h *handlerTopping) CreateTopping(w http.ResponseWriter, r *http.Request) {
 
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
 	userId := int(userInfo["id"].(float64))
+	userRole := userInfo["role"]
+
+	if userRole != "admin" {
+		w.WriteHeader(http.StatusUnauthorized)
+		response := dto.ErrorResult{Code: http.StatusUnauthorized, Message: "forbidden access"}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	dataContex := r.Context().Value("dataFile")
 	filename := dataContex.(string)
@@ -116,8 +124,20 @@ func (h *handlerTopping) CreateTopping(w http.ResponseWriter, r *http.Request) {
 func (h *handlerTopping) UpdateTopping(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	userRole := userInfo["role"]
+
 	dataContex := r.Context().Value("dataFile")
 	filename := dataContex.(string)
+
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	if userRole != "admin" {
+		w.WriteHeader(http.StatusUnauthorized)
+		response := dto.ErrorResult{Code: http.StatusUnauthorized, Message: "forbidden access"}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	price, _ := strconv.Atoi(r.FormValue("price"))
 
@@ -126,7 +146,6 @@ func (h *handlerTopping) UpdateTopping(w http.ResponseWriter, r *http.Request) {
 		Price: price,
 	}
 
-	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 	topping, err := h.ToppingRepository.GetTopping(int(id))
 
 	if err != nil {
@@ -164,7 +183,17 @@ func (h *handlerTopping) UpdateTopping(w http.ResponseWriter, r *http.Request) {
 func (h *handlerTopping) DeleteTopping(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
+	userRole := userInfo["role"]
+
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+
+	if userRole != "admin" {
+		w.WriteHeader(http.StatusUnauthorized)
+		response := dto.ErrorResult{Code: http.StatusUnauthorized, Message: "forbidden access"}
+		json.NewEncoder(w).Encode(response)
+		return
+	}
 
 	topping, err := h.ToppingRepository.GetTopping(id)
 	if err != nil {
