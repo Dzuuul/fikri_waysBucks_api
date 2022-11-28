@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"strconv"
 	dto "ways-bucks-api/dto/result"
 	toppingdto "ways-bucks-api/dto/topping"
@@ -15,8 +14,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// var path_file = "http://localhost:5000/uploads/"
-var path_file_topping = os.Getenv("PATH_FILE")
+var path_file_topping = "http://localhost:5000/uploads/"
+
+// var path_file_topping = os.Getenv("PATH_FILE")
 
 type handlerTopping struct {
 	ToppingRepository repositories.ToppingRepository
