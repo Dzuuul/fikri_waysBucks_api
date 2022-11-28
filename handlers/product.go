@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"strconv"
 	productdto "ways-bucks-api/dto/product"
 	dto "ways-bucks-api/dto/result"
@@ -16,6 +15,7 @@ import (
 )
 
 var path_file = "http://localhost:5000/uploads/"
+
 // var path_file = os.Getenv("PATH_FILE")
 
 type handlerProduct struct {
