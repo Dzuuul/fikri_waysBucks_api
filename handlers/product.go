@@ -15,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// var path_file = "http://localhost:5000/uploads/"
 var path_file = os.Getenv("PATH_FILE")
 
 type handlerProduct struct {
