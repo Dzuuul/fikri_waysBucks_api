@@ -9,12 +9,12 @@ type User struct {
 	Image    string `json:"image" gorm:"type: varchar(255)"`
 }
 
-type UsersProfileResponse struct {
+type UsersResponse struct {
 	ID       int    `json:"id"`
 	Role     string `json:"role"`
 	Fullname string `json:"fullname"`
 }
 
-func (UsersProfileResponse) TableName() string {
+func (UsersResponse) TableName() string {
 	return "users"
 }
